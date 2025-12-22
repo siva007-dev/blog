@@ -31,6 +31,12 @@ const blogSchema = new mongoose.Schema({
 const Blog = mongoose.model('Blog', blogSchema);
 
 // Routes
+
+app.get("/", (req, res) => {
+  res.send("Blog API is running 🚀");
+});
+
+
 app.get('/api/blogs', async (req, res) => {
   try {
     const blogs = await Blog.find({});
