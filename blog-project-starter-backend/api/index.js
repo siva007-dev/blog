@@ -15,9 +15,36 @@ app.use(cors())
 app.use(bodyParser.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URL).then(()=>{
-    console.log("Connection Successfull")
-})
+
+mongoose.set("bufferCommands", false);
+mongoose.set("bufferTimeoutMS", 20000);
+
+let isConnected = false;
+
+async function connectDB() {
+  if (isConnected) return;
+
+  try {
+    await mongoose.connect(process.env.MONGODB_URL, {
+      dbName: "blogDB",
+    });
+    isConnected = true;
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+    throw err;
+  }
+}
+
+// Middleware to ensure DB connection
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch {
+    res.status(500).json({ message: "Database connection failed" });
+  }
+});
 
 
 // Define Schema
