@@ -20,7 +20,7 @@ function Blogs() {
             if (!user) {
                 navigate("/login");
             } else {
-                setadmim(user.uid === "JgKGjZhnptbIoT26ovCIxGepHSC3");
+                setadmim(user.uid === "Qi1YOVxkHifvcLe27YqSM8hneon1");
             }
             setCheckingAuth(false)
         });
