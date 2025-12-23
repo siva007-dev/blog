@@ -10,6 +10,8 @@ function Blogs() {
 
     const [blogs, setBlogs] = useState([]);
     const [admin, setadmim] = useState(false)
+    const [newTitle, setNewTitle] = useState('');
+    const [newContent, setNewContent] = useState('');
     const [checkingAuth, setCheckingAuth] = useState(true);
     const navigate = useNavigate()
 
@@ -31,10 +33,6 @@ function Blogs() {
     }, [navigate]);
 
     if (checkingAuth) return null
-
-    const [newTitle, setNewTitle] = useState('');
-    const [newContent, setNewContent] = useState('');
-
 
     const handleLike = async (blog_id) => {
         try {
