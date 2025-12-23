@@ -10,6 +10,7 @@ function Blogs() {
 
     const [blogs, setBlogs] = useState([]);
     const [admin, setadmim] = useState(false)
+    const [checkingAuth, setCheckingAuth] = useState(true);
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -19,6 +20,7 @@ function Blogs() {
             } else {
                 setadmim(user.uid === "JgKGjZhnptbIoT26ovCIxGepHSC3");
             }
+            setCheckingAuth(false)
         });
 
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blogs`)
@@ -28,7 +30,7 @@ function Blogs() {
         return () => unsubscribe(); // ✅ cleanup
     }, [navigate]);
 
-
+    if (checkingAuth) return null
 
     const [newTitle, setNewTitle] = useState('');
     const [newContent, setNewContent] = useState('');
@@ -109,7 +111,7 @@ function Blogs() {
                 </div> : ""}
 
             <div className="blogs-container grid grid-cols-1 md:grid-cols-2 gap-6 container mx-auto px-4">
-                {blogs.map((blog) => (
+                {Array.isArray(blogs) && blogs.map((blog) => (
                     <div key={blog._id} className="blog-post mb-8 p-6 bg-white shadow-lg rounded-lg">
                         <h3 className="blog-title font-semibold text-2xl text-gray-800 mb-3">{blog.newTitle}</h3>
                         <p className="blog-date text-gray-400 text-sm mb-4">{blog.date}</p>
