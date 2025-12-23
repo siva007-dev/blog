@@ -32,7 +32,10 @@ function Blogs() {
         return () => unsubscribe(); // ✅ cleanup
     }, [navigate]);
 
-    if (checkingAuth) return null
+    if (checkingAuth) {
+  return <div className="text-center mt-20">Loading...</div>;
+}
+
 
     const handleLike = async (blog_id) => {
         try {
