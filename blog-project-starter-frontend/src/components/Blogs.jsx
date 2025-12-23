@@ -9,33 +9,24 @@ import auth from '../config/firebase';
 function Blogs() {
 
     const [blogs, setBlogs] = useState([]);
-    const[admin,setadmim]=useState(false)
-    const navigate=useNavigate()
+    const [admin, setadmim] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
-
-        auth.onAuthStateChanged((user)=>{
-            if(user){
-                if(user.uid === "JgKGjZhnptbIoT26ovCIxGepHSC3"){
-                    setadmim(true)
-                }
-                else{
-                    setadmim(false)
-                }
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (!user) {
+                navigate("/login");
+            } else {
+                setadmim(user.uid === "JgKGjZhnptbIoT26ovCIxGepHSC3");
             }
-            else{
-                navigate("/login")
-            }
-        })
+        });
 
-        window.scrollTo(0, 0);
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blogs`).then((res) => {
-            console.log(res.data)
-            setBlogs(res.data)
-        }).catch(() => {
-            console.log("Error fetching data")
-        })
-    }, [])
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blogs`)
+            .then(res => setBlogs(res.data))
+            .catch(err => console.error(err));
+
+        return () => unsubscribe(); // ✅ cleanup
+    }, [navigate]);
 
 
 
@@ -92,30 +83,30 @@ function Blogs() {
 
             {/* Blog creation form */}
 
-            {admin?
-            <div className="blog-creation-form mb-8" style={{ width: "80%", margin: "auto" }}>
-                <form onSubmit={handleNewBlogSubmit} className="flex flex-col gap-4">
-                    <input
-                        type="text"
-                        placeholder="Blog Title"
-                        value={newTitle}
-                        onChange={(e) => setNewTitle(e.target.value)}
-                        className="p-2 border rounded"
-                        required
-                    />
-                    <textarea
-                        placeholder="Blog Content"
-                        value={newContent}
-                        onChange={(e) => setNewContent(e.target.value)}
-                        className="p-2 border rounded"
-                        rows="4"
-                        required
-                    />
-                    <button type="submit" className="bg-orange-400 text-white p-2 rounded hover:bg-orange-600">
-                        Add Blog
-                    </button>
-                </form>
-            </div>:""}
+            {admin ?
+                <div className="blog-creation-form mb-8" style={{ width: "80%", margin: "auto" }}>
+                    <form onSubmit={handleNewBlogSubmit} className="flex flex-col gap-4">
+                        <input
+                            type="text"
+                            placeholder="Blog Title"
+                            value={newTitle}
+                            onChange={(e) => setNewTitle(e.target.value)}
+                            className="p-2 border rounded"
+                            required
+                        />
+                        <textarea
+                            placeholder="Blog Content"
+                            value={newContent}
+                            onChange={(e) => setNewContent(e.target.value)}
+                            className="p-2 border rounded"
+                            rows="4"
+                            required
+                        />
+                        <button type="submit" className="bg-orange-400 text-white p-2 rounded hover:bg-orange-600">
+                            Add Blog
+                        </button>
+                    </form>
+                </div> : ""}
 
             <div className="blogs-container grid grid-cols-1 md:grid-cols-2 gap-6 container mx-auto px-4">
                 {blogs.map((blog) => (
@@ -129,7 +120,7 @@ function Blogs() {
                 ))}
             </div>
 
-            <Footer/>
+            <Footer />
         </div>
     );
 }
